@@ -1,102 +1,19 @@
-import {useEffect, useState} from 'react';
-import { nanoid } from 'nanoid';
-import { Notify } from 'notiflix';
 import ContactList from './ContactList/ContactList';
 import Filter from './Filter/Filter';
 import ContactForm from './ContactForm/ContactForm';
-import { ContactListContainer, Phonebook, H2 } from './App.styled';
+import { ContactListContainer, Phonebook, H2} from './App.styled';
 
 export default function App() {
-
-  const [contacts, setContacts] = useState(()=>JSON.parse(localStorage.getItem('contacts') )?? []);
-  const [filter, setFilter] = useState('');
-  
-  useEffect(() => {
-   window.localStorage.setItem('contacts', JSON.stringify(contacts));
-}, [contacts]);
-
-  const formSubmit = ({ name, number }) => {
-    const newContact = {
-      name,
-      number,
-      id: nanoid(),
-    };
-
-    const isExist = contacts.some(
-      contact =>
-        contact.name.toLowerCase() === name.toLowerCase() ||
-        contact.number === number
-    );
-
-    if (isExist) {
-      Notify.info(`${name} is already in contacts`, {
-        position: 'center-top',
-        info: {
-          background: '#738ddae4',
-        },
-      });
-      return;
-    }
-     setContacts(( contacts ) =>
-      [newContact, ...contacts],
-    );
-    Notify.success('Contact added successfully', {
-      position: 'center-top',
-      clickToClose: true,
-      success: {
-        background: '#9dbc89df',
-      },
-    });
-  };
-  
-   const deleteContact = contactId => {
-    setContacts(prevState => prevState.filter(contact => contact.id !== contactId),
-    );
-    Notify.success('Deleted', {
-      position: 'center-top',
-      clickToClose: true,
-      timeout: 1500,
-      success: {
-        background: '#9dbc89df',
-      },
-    });
-  };
-
-  const handleFilterChange = event => {
-    setFilter( event.currentTarget.value );
-  };
-
-  const filterContactsByName = () => {
-    const filteredContacts = contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filter.toLowerCase())
-    );
-
-    return filteredContacts;
-  };
-
-   const resetFilter = () => {
-    setFilter('');
-  };
-
     return (
       <>
         <Phonebook>Phonebook</Phonebook>
-        <ContactForm onSubmit={formSubmit} />
+        <ContactForm/>
         <ContactListContainer>
           <H2>Contacts</H2>
-          <Filter
-            value={filter}
-            onChange={handleFilterChange}
-            reset={resetFilter}
-          />
-          {filterContactsByName().length ? (
-            <ContactList
-              contacts={filterContactsByName()}
-              onDeleteContact={deleteContact}
-            />
-          ) : (
-            <H2>Contact list is empty</H2>
-          )}
+          <Filter/>
+
+            <ContactList/>
+
         </ContactListContainer>
       </>
     );

@@ -13,3 +13,12 @@ export const Container = styled.ul`
   margin-bottom: 16px;
   background-image: linear-gradient(70deg, #d6d6d6, #f7f7f7);
 `;
+
+export const H2 = styled.h2`
+  display: block;
+  text-align: center;
+  margin-bottom: 8px;
+  font-size: 24px;
+  color: #555;
+  cursor: default;
+`;

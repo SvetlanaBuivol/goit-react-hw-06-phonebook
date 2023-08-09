@@ -1,5 +1,4 @@
-import { useState} from 'react';
-import PropTypes from 'prop-types';
+import { useState } from 'react';
 import { BsFillPersonFill, BsFillTelephoneFill } from 'react-icons/bs';
 import {
   FormContainer,
@@ -8,11 +7,16 @@ import {
   Icon,
   Button,
 } from './ContactForm.styled';
+import { useDispatch, useSelector } from 'react-redux';
+import { Notify } from 'notiflix';
+import { nanoid } from 'nanoid';
+import { addContact, getContacts } from 'redax/contactsSlice';
 
-export default function ContactForm({onSubmit}) {
-
+export default function ContactForm() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
 
   const handleInputChange = ({ target }) => {
     const { name, value } = target;
@@ -21,22 +25,52 @@ export default function ContactForm({onSubmit}) {
       case 'name':
         setName(value);
         break;
-      
+
       case 'number':
         setNumber(value);
         break;
-      
+
       default:
         return;
     }
-  }
+  };
 
-  const handleFormSubmit = event => {
+  const formSubmit = event => {
     event.preventDefault();
 
-    onSubmit({name, number});
+    const newContact = {
+      name,
+      number,
+      id: nanoid(),
+    };
 
-   reset();
+    const isExist = contacts.some(
+      contact =>
+        contact.name.toLowerCase() === name.toLowerCase() ||
+        contact.number === number
+    );
+
+    if (isExist) {
+      reset();
+      Notify.info(`${name} is already in contacts`, {
+        position: 'center-top',
+        info: {
+          background: '#738ddae4',
+        },
+      });
+      return;
+    }
+
+    dispatch(addContact(newContact));
+
+    Notify.success('Contact added successfully', {
+      position: 'center-top',
+      clickToClose: true,
+      success: {
+        background: '#9dbc89df',
+      },
+    });
+    reset();
   };
 
   const reset = () => {
@@ -45,7 +79,7 @@ export default function ContactForm({onSubmit}) {
   };
 
   return (
-    <FormContainer onSubmit={handleFormSubmit}>
+    <FormContainer onSubmit={formSubmit}>
       <div>
         <Label>
           <Icon>
@@ -82,13 +116,6 @@ export default function ContactForm({onSubmit}) {
     </FormContainer>
   );
 }
-
-ContactForm.propTypes = {
-  handleFormSubmit: PropTypes.func,
-};
-
-
-
 
 // class ContactForm extends Component {
 //   state = {
@@ -154,8 +181,6 @@ ContactForm.propTypes = {
 //     );
 //   }
 // }
-
-
 
 // ContactForm.propTypes = {
 //   handleFormSubmit: PropTypes.func,
