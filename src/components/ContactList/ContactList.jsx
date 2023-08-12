@@ -2,7 +2,7 @@ import React from 'react';
 import Contact from 'components/Contact/Contact';
 import { Container, H2 } from './ContactList.styled';
 import { useSelector } from 'react-redux';
-import { selectFilteredContacts } from 'redax/filterSlice';
+import { selectFilteredContacts } from 'redax/filter/filterSelectors';
 
 function ContactList() {
   const filteredcontacts = useSelector(selectFilteredContacts);

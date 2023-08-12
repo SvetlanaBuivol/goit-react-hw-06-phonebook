@@ -10,7 +10,8 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { Notify } from 'notiflix';
 import { nanoid } from 'nanoid';
-import { addContact, getContacts } from 'redax/contactsSlice';
+import { addContact } from 'redax/contacts/contactsSlice';
+import { getContacts } from 'redax/contacts/contactSelectors';
 
 export default function ContactForm() {
   const [name, setName] = useState('');

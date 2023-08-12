@@ -8,8 +8,8 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist'
-import { contactsReducer } from './contactsSlice';
-import { filterSlice } from './filterSlice';
+import { contactsReducer } from './contacts/contactsSlice';
+import { filterSlice } from './filter/filterSlice';
 
 const store = configureStore({
   reducer: {
